@@ -41,53 +41,6 @@ Scannez le qr code qui s'est affiché quand vous avez éxecuté npx expo start
 
 
 ---
-# En Monolithique :
-
-
-
-
-## Coté Back:
-Depuis la racine du projet :
-- ``pip install -r ./core/requirements.txt``
-
-- ``python .\core\manage.py makemigrations``
-
-- ``python .\core\manage.py migrate``
-
-- ``python .\core\manage.py runserver 0.0.0.0:8000 ``
-
-- ``sudo systemctl start mongod``
-
-## Coté front :
-
-
-### Ajuster l'ip du front :
-
-- Dans : **/mobileApp/RepetikaApp/config/config.js** : changer l'ip par celle du serveur host.
-- Connecter le téléphone de test et le serveur au même réseau local
-dans **/mobileApp/RepetikaApp**
-- ``npm install``
-- ``npx expo install``
-- ``npx expo start --tunnel ``
-- Scan QR code avec phone
-
-
-### Lancer mongodb
-
-Exécuter `./Backup/restore-mongo.sh`
-
-
-
----
-
-# En MicroServices :
-# Installation de Docker et Minikube
-
-## Docker
-Suivez les instructions correspondant à votre système d'exploitation sur [le site officiel de Docker](https://www.docker.com/)
-
-### ajoutez votre utilisateur à la liste des utilisateurs Docker 
-``sudo usermod -aG docker $USER'``
 
 ## Minikube
 ### Téléchargement de Minikube
