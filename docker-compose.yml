@@ -1,0 +1,163 @@
+# docker-compose.yml
+services:
+  mongodb:
+    image: mongo:7
+    command: ["--bind_ip_all"]
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-repetika}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+      - ./dev/mongo-seed:/seed:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-authdb}
+      POSTGRES_USER: ${POSTGRES_USER:-authuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-authpass}
+    ports:
+      - "5432:5432" 
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  main-service:
+    build:
+      context: ./services/main_service
+    env_file: [.env]
+    environment:
+      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017/${MONGO_DB:-repetika}}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./services/main_service:/app
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: unless-stopped
+
+  decks-service:
+    build:
+      context: ./services/decks_service
+    env_file: [.env]
+    environment:
+      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017/${MONGO_DB:-repetika}}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./services/decks_service:/app
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: unless-stopped
+
+  cours-service:
+    build:
+      context: ./services/cours_service
+    env_file: [.env]
+    environment:
+      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017/${MONGO_DB:-repetika}}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./services/cours_service:/app
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: unless-stopped
+
+  planning-service:
+    build:
+      context: ./services/planning_service
+    env_file: [.env]
+    environment:
+      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017/${MONGO_DB:-repetika}}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    ports:
+      - "8003:8000"
+    volumes:
+      - ./services/planning_service:/app
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: unless-stopped
+
+  session-service:
+    build:
+      context: ./services/session_service
+    env_file: [.env]
+    environment:
+      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017/${MONGO_DB:-repetika}}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    ports:
+      - "8004:8000"
+    volumes:
+      - ./services/session_service:/app
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: unless-stopped
+
+  quiz-service:
+    build:
+      context: ./services/quiz_service
+    env_file: [.env]
+    environment:
+      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017/${MONGO_DB:-repetika}}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    ports:
+      - "8005:8000"
+    volumes:
+      - ./services/quiz_service:/app
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: unless-stopped
+
+  authentification-service:
+    build:
+      context: ./services/authentification_service
+    env_file: [.env]
+    environment:
+      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017/${MONGO_DB:-repetika}}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
+      POSTGRES_DB: ${POSTGRES_DB:-authdb}
+      POSTGRES_USER: ${POSTGRES_USER:-authuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-authpass}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy      
+    ports:
+      - "8006:8000"
+    volumes:
+      - ./services/authentification_service:/app
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: unless-stopped
+
+volumes:
+  mongodb-data:
+  pg-data:

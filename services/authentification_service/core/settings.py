@@ -44,9 +44,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'Authentification',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,6 +57,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8081",
+    "http://192.168.1.17:8081",
+]
+CORS_ALLOW_CREDENTIALS = False
 
 ROOT_URLCONF = 'core.urls'
 
@@ -84,11 +93,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "mydb",
-        "USER": "myuser",
-        "PASSWORD": "mypassword",
-        "HOST": "postgres",  # correspond au nom du Service dans le YAML
-        "PORT": "5432",
+        "NAME": os.getenv("POSTGRES_DB", "authdb"),
+        "USER": os.getenv("POSTGRES_USER", "authuser"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "authpass"),
+        "HOST": os.getenv("POSTGRES_HOST", "postgres"),
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
     }
 }
 

@@ -1,0 +1,35 @@
+services:
+  main_service:
+    volumes:
+      - ./services/main_service:/app
+    command: python manage.py runserver 0.0.0.0:8000
+
+  decks_service:
+    volumes:
+      - ./services/decks_service:/app
+    command: python manage.py runserver 0.0.0.0:8000
+
+  cours_service:
+    volumes:
+      - ./services/cours_service:/app
+    command: python manage.py runserver 0.0.0.0:8000
+
+  planning_service:
+    volumes:
+      - ./services/planning_service:/app
+    command: python manage.py runserver 0.0.0.0:8000
+
+  session_service:
+    volumes:
+      - ./services/session_service:/app
+    command: python manage.py runserver 0.0.0.0:8000
+
+  quiz_service:
+    volumes:
+      - ./services/quiz_service:/app
+    command: python manage.py runserver 0.0.0.0:8000
+
+  authentification_service:
+    volumes:
+      - ./services/authentification_service:/app
+    command: python manage.py runserver 0.0.0.0:8000

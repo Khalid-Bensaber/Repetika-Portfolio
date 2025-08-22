@@ -130,7 +130,7 @@ class GetAccessibleCourses(APIView):
         response = requests.get(COURS_BASE_URL + "/getAccessibleCourses", params={"user_id": user_id})
         if response.status_code != 200:
             return Response(
-                {"error": "Failed to retrieve accessible courses."},
+                {"error": "Failed to retrieve accessible courses.", "details": response.text},
                 status=response.status_code
             )
 

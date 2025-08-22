@@ -43,9 +43,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'MainServer',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -54,6 +56,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8081",
+    "http://192.168.1.17:8081",
+]
+CORS_ALLOW_CREDENTIALS = False
 
 ROOT_URLCONF = 'core.urls'
 
@@ -129,7 +136,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #AUTH_USER_MODEL = 'Authentification.CustomUser'
 
-COURS_BASE_URL = 'http://cours-service:8000/api/cours/' 
+COURS_BASE_URL = 'http://cours-service:8000/api/cours' 
 QUIZ_BASE_URL = 'http://quiz-service:8000/api/quiz'
 PLANNING_BASE_URL = 'http://planning-service:8000/api/planning'
 DECKS_BASE_URL = 'http://decks-service:8000/api/decks'
