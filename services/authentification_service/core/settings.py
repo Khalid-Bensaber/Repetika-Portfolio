@@ -145,7 +145,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'Authentification.CustomUser'
 
-COURS_BASE_URL = 'http://cours-service:8000/api/cours/' 
+COURS_BASE_URL = 'http://cours-service:8000/api/cours' 
 QUIZ_BASE_URL = 'http://quiz-service:8000/api/quiz'
 PLANNING_BASE_URL = 'http://planning-service:8000/api/planning'
 DECKS_BASE_URL = 'http://decks-service:8000/api/decks'

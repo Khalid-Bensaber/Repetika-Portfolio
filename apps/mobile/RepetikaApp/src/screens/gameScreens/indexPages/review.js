@@ -26,7 +26,7 @@ import {AuthContext} from "../../../utils/AuthContext";
 export default function Review({lessonId, deckId}) {
     const {t} = useTranslation(); // Hook pour la traduction des textes.
     const {userId} = useContext(AuthContext); // Récupère l'identifiant utilisateur depuis le contexte d'authentification.
-    const url = config.BASE_URL + `/main/start-session?user_id=${userId}&deck_id=${deckId}`; // URL de l'API pour démarrer une session de révision.
+    const url = config.BASE_URL + `/api/main/start-session?user_id=${userId}&deck_id=${deckId}`; // URL de l'API pour démarrer une session de révision.
 
     const defaultDeck = []; // Deck par défaut (vide).
     const [deck, setDeck] = useState([]); // État pour stocker les cartes du deck.

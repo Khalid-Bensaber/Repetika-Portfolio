@@ -122,7 +122,7 @@ export default function ProfileScreen() {
     console.log(userId);
 
     // Appel API pour récupérer username et mail
-    const { data: userInfo, loading: userLoading, error: userError } = useFetch(Config.BASE_URL+'/main/getInfos/?id_user='+userId);
+    const { data: userInfo, loading: userLoading, error: userError } = useFetch(Config.BASE_URL+'/api/main/getInfos/?id_user='+userId);
 
     console.log(Config.BASE_URL+'/api/auth/getInfos/?id_user='+userId)
 

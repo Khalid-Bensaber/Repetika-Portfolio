@@ -66,7 +66,7 @@ export default function RegisterScreen() {
         }
 
         if (valid) {
-            fetch(config.BASE_URL+'/main/register', {
+            fetch(config.BASE_URL+'/api/main/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

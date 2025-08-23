@@ -103,7 +103,7 @@ const CreateCourseScreen =  () => {
                     i++;
                 })
                 try {
-                    const response = await fetch(config.BASE_URL + '/main/createCards', {
+                    const response = await fetch(config.BASE_URL + '/api/main/createCards', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -159,7 +159,7 @@ const CreateCourseScreen =  () => {
 
         formData.append('metadata', JSON.stringify(metadata));
         try {
-            const response = await fetch(Config.BASE_URL+"/main/ajout-cours", {
+            const response = await fetch(Config.BASE_URL+"/api/main/ajout-cours", {
                 method: 'POST',
                 body: formData,
             });

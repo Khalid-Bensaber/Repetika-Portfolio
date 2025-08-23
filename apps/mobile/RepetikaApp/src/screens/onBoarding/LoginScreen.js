@@ -37,7 +37,7 @@ export default function LoginScreen() {
 
     const loginFunction = async () => {
         try {
-            const response = await fetch(config.BASE_URL + '/main/login', {
+            const response = await fetch(config.BASE_URL + '/api/main/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

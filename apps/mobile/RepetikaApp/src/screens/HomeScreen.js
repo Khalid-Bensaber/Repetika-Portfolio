@@ -27,7 +27,7 @@ export default function HomeScreen() {
     const [lessons, setLessons] = useState([]);
     const [showNetworkError, setShowNetworkError] = useState(false);
     const {userId}=useContext(AuthContext);
-    const url = config.BASE_URL+`/main/getAccessibleCourses?user_id=${userId}`;
+    const url = config.BASE_URL+`/api/main/getAccessibleCourses?user_id=${userId}`;
     const { data, loading, error, refetch } = useFetch(url);
 
     // Rafraîchir la liste des cours à chaque focus

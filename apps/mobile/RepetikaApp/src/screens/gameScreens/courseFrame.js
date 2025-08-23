@@ -14,7 +14,7 @@ import {CourseContext} from "../../utils/CourseContext";
 export default function CourseFrame() {
     const { userId } = useContext(AuthContext);
     const {currentCoursId,currentCoursName}= useContext(CourseContext)
-    const pdfUrl = Config.BASE_URL+`/main/getPDF?user_id=${userId}&id_course=${currentCoursId}`;
+    const pdfUrl = Config.BASE_URL+`/api/main/getPDF?user_id=${userId}&id_course=${currentCoursId}`;
     const googleViewerUrl = `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(pdfUrl)}`;
     const route = useRoute();
 
@@ -27,7 +27,7 @@ export default function CourseFrame() {
         const idChapitre = route.params?.chapterId;
         const idDeck = route.params?.deckId;
 
-        const url = Config.BASE_URL + `/main/completeQuiz?user_id=${userId}&id_chapitre=${idChapitre}&id_deck=${idDeck}`;
+        const url = Config.BASE_URL + `/api/main/completeQuiz?user_id=${userId}&id_chapitre=${idChapitre}&id_deck=${idDeck}`;
         console.log(url);
 
         try {
