@@ -60,7 +60,7 @@ const ChooseCoursesScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch('http://cours-service:8000/api/cours/showAllSharedCourses'); // TODO: remplace par ton URL réelle
+        const response = await fetch('http://localhost:8080/api/cours/showAllSharedCourses'); // TODO: remplace par ton URL réelle
         const data = await response.json();
 
         const formatted = data.map(c => ({

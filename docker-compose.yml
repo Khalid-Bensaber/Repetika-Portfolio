@@ -157,6 +157,20 @@ services:
       - ./services/authentification_service:/app
     command: python manage.py runserver 0.0.0.0:8000
     restart: unless-stopped
+  gateway:
+    image: nginx:1.25
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - main-service
+      - cours-service
+      - decks-service
+      - planning-service
+      - quiz-service
+      - session-service
+      - authentification-service
 
 volumes:
   mongodb-data:
