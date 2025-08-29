@@ -124,7 +124,7 @@ export default function ProfileScreen() {
     // Appel API pour récupérer username et mail
     const { data: userInfo, loading: userLoading, error: userError } = useFetch('http://localhost:8080/api/main/getInfos/?id_user='+userId);
 
-    console.log('localhost:8080/api/auth/getInfos/?id_user='+userId)
+    console.log('localhost:8080/api/main/getInfos/?id_user='+userId)
 
     useEffect(() => {
         if(userInfo){
