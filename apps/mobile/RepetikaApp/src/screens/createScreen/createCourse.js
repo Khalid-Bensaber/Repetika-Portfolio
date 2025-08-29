@@ -103,7 +103,7 @@ const CreateCourseScreen =  () => {
                     i++;
                 })
                 try {
-                    const response = await fetch(config.BASE_URL + '/api/main/createCards', {
+                    const response = await fetch('localhost:8080/api/main/createCards', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

@@ -65,7 +65,7 @@ export default function ReviewFrame() {
             };
 
 
-            const response = await fetch(config.BASE_URL + '/api/main/update-session', {
+            const response = await fetch('localhost:8080/api/main/update-session', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
