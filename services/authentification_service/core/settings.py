@@ -6,7 +6,6 @@ SECRET_KEY = 'django-insecure-ug*a&%=rgy2wu4o2(k+vt88+rwiauwj8c%zn(lbk^3h1#la+41
 
 INSTALLED_APPS += [
     'django.contrib.admin', 
-    'Authentification.apps.AuthentificationConfig',
     'Authentification',
 ]
 

@@ -5,6 +5,9 @@ from bson import ObjectId
 
 
 class CustomUser(AbstractUser):
+    class Meta:
+        db_table = "authentification_customuser"
+
     def generate_mongo_id():
         return str(ObjectId())
         
