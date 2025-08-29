@@ -46,6 +46,7 @@ services:
       - "8000:8000"
     volumes:
       - ./services/main_service:/app
+      - ./services/shared:/app/shared:ro
     command: python manage.py runserver 0.0.0.0:8000
     restart: unless-stopped
 
@@ -63,6 +64,7 @@ services:
       - "8001:8000"
     volumes:
       - ./services/decks_service:/app
+      - ./services/shared:/app/shared:ro
     command: python manage.py runserver 0.0.0.0:8000
     restart: unless-stopped
 
@@ -80,6 +82,7 @@ services:
       - "8002:8000"
     volumes:
       - ./services/cours_service:/app
+      - ./services/shared:/app/shared:ro
     command: python manage.py runserver 0.0.0.0:8000
     restart: unless-stopped
 
@@ -97,6 +100,7 @@ services:
       - "8003:8000"
     volumes:
       - ./services/planning_service:/app
+      - ./services/shared:/app/shared:ro
     command: python manage.py runserver 0.0.0.0:8000
     restart: unless-stopped
 
@@ -114,6 +118,7 @@ services:
       - "8004:8000"
     volumes:
       - ./services/session_service:/app
+      - ./services/shared:/app/shared:ro
     command: python manage.py runserver 0.0.0.0:8000
     restart: unless-stopped
 
@@ -131,6 +136,7 @@ services:
       - "8005:8000"
     volumes:
       - ./services/quiz_service:/app
+      - ./services/shared:/app/shared:ro
     command: python manage.py runserver 0.0.0.0:8000
     restart: unless-stopped
 
@@ -155,6 +161,7 @@ services:
       - "8006:8000"
     volumes:
       - ./services/authentification_service:/app
+      - ./services/shared:/app/shared:ro
     command: python manage.py runserver 0.0.0.0:8000
     restart: unless-stopped
   gateway:
