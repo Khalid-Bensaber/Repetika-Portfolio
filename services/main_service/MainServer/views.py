@@ -5,11 +5,16 @@ import requests, tempfile, zipfile, os, uuid
 from core.settings import *
 from io import BytesIO
 import tempfile
+import logging
 
 from django.http import HttpResponse, JsonResponse, FileResponse
 from django.utils import timezone
 
 from rest_framework import status
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.response import Response
@@ -485,6 +490,9 @@ class UploadPDF(APIView):
         pdf_file = request.FILES.get('pdf')
         metadata = request.data.get('metadata')
 
+        logger.info("FILES: %s", list(request.FILES.keys()))
+        logger.info("DATA: %s", list(request.data.keys()))
+
         if not pdf_file:
             return Response({"error": "Missing PDF"}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -496,8 +504,9 @@ class UploadPDF(APIView):
             except json.JSONDecodeError:
                 return Response({"error": "Invalid JSON in metadata"}, status=status.HTTP_400_BAD_REQUEST)
         
+        logger.info("URL = %s", COURS_BASE_URL + "/ajout-cours")
         response = requests.post(
-            COURS_BASE_URL + "ajout-cours", 
+            COURS_BASE_URL + "/ajout-cours", 
             files={'pdf': pdf_file,}, 
             data={'metadata': json.dumps(metadata_json)}
         )
