@@ -1,4 +1,4 @@
-import {View, Text, Pressable, Image, TouchableOpacity, Alert} from "react-native";
+import {View, Text, Pressable, Image, TouchableOpacity, Alert, Platform} from "react-native";
 import Input from "../../components/frm_input";
 import styles from "../../styles/createCourse/createCourse.style"
 import globalStyles from "../../styles/global";
@@ -10,6 +10,7 @@ import colors from "../../styles/colors";
 import {PlatformPressable} from "@react-navigation/elements";
 import {useNavigation} from "@react-navigation/native";
 import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
 import {CreateCourseContext} from "../../utils/CreateCourseContext";
 import Config from "../../config/config";
 import config from "../../config/config";
@@ -64,20 +65,19 @@ const CreateCourseScreen =  () => {
     const [loading, setLoading] = useState(false); // Ajout de l'état de chargement
 
     const getPdf = async () => {
-        try {
-            const result = await DocumentPicker.getDocumentAsync({
-                type: 'application/pdf',
-                copyToCacheDirectory: true,
-            });
-            if (result.canceled === false) {
-                setPdfFile(result); // Sauvegarde le fichier sélectionné
-            } else {
-                console.log('Sélection annulée');
-            }
-        } catch (err) {
-            console.error('Erreur sélection PDF:', err);
-            Alert.alert('Erreur', t("CreateCoursePage.PdfSelectError"));
-        }
+    const res = await DocumentPicker.getDocumentAsync({
+        type: 'application/pdf',
+        copyToCacheDirectory: true,
+        multiple: false,
+    });
+    const canceled = ('canceled' in res) ? res.canceled : (res.type !== 'success');
+    console.log("PDF Picker Result:", res);
+    console.log("PDF Picker Canceled:", canceled);
+    if (!canceled) {
+        const a = ('assets' in res) ? res.assets[0] : res;   // compat ancienne API
+        setPdfFile({ uri: a.uri, name: a.name, mimeType: a.mimeType });
+    }
+    return res;
     };
 
 
@@ -103,7 +103,7 @@ const CreateCourseScreen =  () => {
                     i++;
                 })
                 try {
-                    const response = await fetch('localhost:8080/api/main/createCards', {
+                    const response = await fetch('http://localhost:8080/api/main/createCards', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -141,15 +141,6 @@ const CreateCourseScreen =  () => {
             return;
         }
 
-        const formData = new FormData();
-        const file = pdfFile.assets[0];
-        formData.append('pdf', {
-            uri: file.uri,
-            name: file.name || 'document.pdf',
-            type: file.mimeType || 'application/pdf',
-        });
-
-
         const metadata = {
             course_name: courseTitle || "Cours sans titre",
             chapters: chapterList.map(chap => [chap.title, 1]), // Remplace 1 par la vraie durée
@@ -157,29 +148,51 @@ const CreateCourseScreen =  () => {
             public: false,
         };
 
-        formData.append('metadata', JSON.stringify(metadata));
+        const url =
+            Platform.OS === "android"
+            ? "http://10.0.2.2:8080/api/main/ajout-cours"
+            : "http://localhost:8080/api/main/ajout-cours";
+
         try {
-            const response = await fetch(Config.BASE_URL+"/api/main/ajout-cours", {
-                method: 'POST',
-                body: formData,
-            });
+            if (Platform.OS === "web") {
+            // Web: fetch + FormData + Blob
+            const fd = new FormData();
+            const blob = await (await fetch(pdfFile.uri)).blob();
+            fd.append("pdf", blob, pdfFile.name ?? "document.pdf");
+            fd.append("metadata", JSON.stringify(metadata));
 
-            const data = await response.json();
-            if (response.ok) {
-
-                return(data)
+            const resp = await fetch(url, { method: "POST", body: fd });
+            console.log("Resp : ", resp);
+            const data = await resp.json();
+            if (!resp.ok) { console.error("Erreur serveur:", data); Alert.alert("Erreur", t("CreateCoursePage.SendError")); return false; }
+            return data;
             } else {
-                console.error("Erreur serveur:", data);
-                Alert.alert("Erreur", t("CreateCoursePage.SendError"));
-                return false
+            // iOS/Android natif: uploadAsync
+            const result = await FileSystem.uploadAsync(url, pdfFile.uri, {
+                httpMethod: "POST",
+                uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+                fieldName: "pdf",
+                parameters: { metadata: JSON.stringify(metadata) },
+                headers: { Accept: 'application/json' },
+            });
+            const ok = result.status >= 200 && result.status < 300;
+            const ct = (result.headers && (result.headers['content-type'] || result.headers['Content-Type'])) || '';
+            let data = null;
+            if (ct.includes('application/json')) {
+            data = JSON.parse(result.body || 'null');
+            } else {
+            console.log('Non-JSON:', result.status, ct, (result.body || '').slice(0,200));
+            throw new Error(`Unexpected response: ${result.status}`);
             }
-
+            if (!ok) throw new Error('Server error');
+            return data;
+            }
         } catch (err) {
             console.error("Erreur réseau:", err);
             Alert.alert("Erreur", t("CreateCoursePage.ServerError"));
-            return false
+            return false;
         }
-    };
+        };
 
 
 
@@ -251,9 +264,9 @@ const CreateCourseScreen =  () => {
                 <Input maxLength={64} value={courseTitle} onChangeText={setCourseTitle} />
                 <Text style={styles.inputContainer}>{t("CreateCoursePage.DescCourseLabel")}</Text>
                 <Input maxLength={256} value={courseDescription} onChangeText={setCourseDescription} multiline={true} numberOfLines={4} />
-                <Text style={styles.inputContainer}>{pdfFile?pdfFile.assets[0].name:""}</Text>
+                <Text style={styles.inputContainer}>{pdfFile?.name ?? ''}</Text>
                 <TouchableOpacity style={styles.editPictureBtn} onPress={() => getPdf()}>
-                    <Text style={styles.editPictureBtnText}>{pdfFile?t("CreateCoursePage.EditPdfLabel"):t("CreateCoursePage.AddPdfLabel")}</Text>
+                    <Text style={styles.editPictureBtnText}>{pdfFile ? t("CreateCoursePage.EditPdfLabel") : t("CreateCoursePage.AddPdfLabel")}</Text>
                 </TouchableOpacity>
                 {/* <Text style={styles.inputContainer}>Tags</Text>
                 <Text style={[styles.inputContainer,{fontStyle:'italic'}]}>Coming sooon</Text>*/}

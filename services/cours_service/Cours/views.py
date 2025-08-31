@@ -1,6 +1,8 @@
 import json
 import requests
 import os
+import logging
+logger = logging.getLogger(__name__)
 from core.settings import *
 from datetime import datetime
 
@@ -318,6 +320,8 @@ class UploadPDF(APIView):
         return Response({'message': 'Use POST to upload a file.'})
 
     def post(self, request, *args, **kwargs):
+        logger.info("ON EST DANS LE UPLOAD_PDF DE COURS")
+
         pdf_file = request.FILES.get('pdf')
         metadata = request.data.get('metadata')
         list_pdf=[]

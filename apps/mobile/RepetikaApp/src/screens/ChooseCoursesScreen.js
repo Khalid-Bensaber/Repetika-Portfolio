@@ -132,7 +132,7 @@ const ChooseCoursesScreen = ({ navigation }) => {
           }).toString();
   
           const res = await fetch(
-            `${config.BASE_URL}/addToSubscribers?${qs}`
+            `localhost:8080/main/api/addToSubscribers?${qs}`
           );
   
           if (!res.ok) {
