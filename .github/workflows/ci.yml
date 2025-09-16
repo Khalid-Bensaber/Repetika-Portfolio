@@ -2,10 +2,9 @@ name: ci-small-test
 
 on:
   push:
-    branches: [ main ]
+    branches: [ testing ]
   pull_request:
-    branches: [ main ]
-  workflow_dispatch: {}
+    branches: [ testing ]
 
 jobs:
   small-test:
