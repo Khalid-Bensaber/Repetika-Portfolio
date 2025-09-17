@@ -1,5 +1,9 @@
 name: django-ci
-on: { push: { branches: [testing] }, pull_request: { branches: [testing] } }
+on:
+  push:
+    branches: [testing]
+  pull_request:
+    branches: [testing]
 
 jobs:
   discover:
