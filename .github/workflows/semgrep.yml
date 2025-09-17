@@ -16,7 +16,7 @@ jobs:
     if: (github.actor != 'dependabot[bot]')
     steps:
       - uses: actions/checkout@v4
-      - run: semgrep scan --config=p/ci --json --output=semgrep.json --error .
+      - run: semgrep scan --config=p/django --config=p/python --json --output=semgrep.json --error .
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
