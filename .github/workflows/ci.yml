@@ -1,0 +1,45 @@
+name: django-ci
+on: { push: { branches: [testing] }, pull_request: { branches: [testing] } }
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.mk.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: mk
+        shell: bash
+        run: |
+          matrix_json="$(python - <<'PY'
+          import json, pathlib, os
+          services=[]
+          for p in pathlib.Path("services").glob("*/manage.py"):
+              d=str(p.parent)
+              services.append({"name": os.path.basename(d), "path": d})
+          print(json.dumps({"service": services}))
+          PY
+          )"
+          echo "matrix=$matrix_json" >> "$GITHUB_OUTPUT"
+
+  test:
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.discover.outputs.matrix) }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.service.path }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Vendor shared into service
+        run: cp -a "$GITHUB_WORKSPACE/services/shared/." "./shared/" #TODO: Delete this line (and above) and replace by making 'shared' a module
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: ${{ matrix.service.path }}/requirements*.txt
+      - run: python -m pip install --upgrade pip
+      - run: pip install -r requirements.txt
+      - run: python manage.py check
