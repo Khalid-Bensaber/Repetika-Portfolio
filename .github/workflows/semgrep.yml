@@ -2,7 +2,9 @@ name: Semgrep (Django)
 on:
   pull_request: {}
   push:
-    branches: [testing]
+    branches: 
+      - testing
+      - master
 
 permissions:
   contents: read

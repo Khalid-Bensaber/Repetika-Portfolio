@@ -1,9 +1,13 @@
 name: django-ci
 on:
   push:
-    branches: [testing]
+    branches: 
+      - testing
+      - master
   pull_request:
-    branches: [testing]
+    branches: 
+      - testing
+      - master
 
 jobs:
   discover:
