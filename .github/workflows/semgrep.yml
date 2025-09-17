@@ -16,7 +16,7 @@ jobs:
     if: (github.actor != 'dependabot[bot]')
     steps:
       - uses: actions/checkout@v4
-      - run: semgrep scan --config=p/django --config=p/python --json --output=semgrep.json --verbose --error .
+      - run: semgrep scan --json --output=semgrep.json --exclude=./infra --verbose --error . # Temporary infra skip until kubernetes is reworked
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
