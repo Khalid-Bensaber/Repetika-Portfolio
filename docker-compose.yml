@@ -162,7 +162,10 @@ services:
     volumes:
       - ./services/authentification_service:/app
       - ./services/shared:/app/shared:ro
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      bash -lc "python wait_db.py &&
+                python manage.py migrate --noinput &&
+                python manage.py runserver 0.0.0.0:8000"
     restart: unless-stopped
   gateway:
     image: nginx:1.25
