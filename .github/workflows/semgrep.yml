@@ -1,0 +1,26 @@
+name: Semgrep (Django)
+on:
+  pull_request: {}
+  push:
+    branches: 
+      - testing
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep:
+    name: semgrep-oss/scan
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+    if: (github.actor != 'dependabot[bot]')
+    steps:
+      - uses: actions/checkout@v4
+      - run: semgrep scan --json --output=semgrep.json --exclude=./infra --verbose --error . # Temporary infra skip until kubernetes is reworked
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: semgrep-results
+          path: semgrep.json
