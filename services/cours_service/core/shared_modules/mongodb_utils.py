@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from bson import ObjectId
 import os
 
-MONGO_URI = os.getenv("MONGO_URI", "mongodb://mongodb-service:27017/")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://mongodb:27017/")
 _client = MongoClient(MONGO_URI)
 
 def get_db(database_name):

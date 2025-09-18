@@ -104,7 +104,7 @@ docker build -t authentification-service:latest ./authentification_service
 ``mongorestore /tmp/save_mongo``
 
 ## Accès à la base MongoDB via Compass (port forwarding)
-``minikube kubectl port-forward svc/mongodb-service 27017:27017``
+``minikube kubectl port-forward svc/mongodb 27017:27017``
 
 ## Afficher l'ip de Minikube
 ``minikube ip``
