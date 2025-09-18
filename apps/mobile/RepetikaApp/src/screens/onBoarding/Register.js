@@ -66,7 +66,7 @@ export default function RegisterScreen() {
         }
 
         if (valid) {
-            fetch('localhost:8080/api/main/register', {
+            fetch('http://localhost:8080/api/main/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

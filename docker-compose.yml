@@ -37,7 +37,7 @@ services:
       context: ./services/main_service
     env_file: [.env]
     environment:
-      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017/${MONGO_DB:-repetika}}
+      MONGO_URI: ${MONGO_URI:-mongodb://mongodb-service:27017/${MONGO_DB:-repetika}}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
     depends_on:
       mongodb:
@@ -55,7 +55,7 @@ services:
       context: ./services/decks_service
     env_file: [.env]
     environment:
-      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017/${MONGO_DB:-repetika}}
+      MONGO_URI: ${MONGO_URI:-mongodb://mongodb-service:27017/${MONGO_DB:-repetika}}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
     depends_on:
       mongodb:
@@ -73,7 +73,7 @@ services:
       context: ./services/cours_service
     env_file: [.env]
     environment:
-      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017/${MONGO_DB:-repetika}}
+      MONGO_URI: ${MONGO_URI:-mongodb://mongodb-service:27017/${MONGO_DB:-repetika}}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
     depends_on:
       mongodb:
@@ -91,7 +91,7 @@ services:
       context: ./services/planning_service
     env_file: [.env]
     environment:
-      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017/${MONGO_DB:-repetika}}
+      MONGO_URI: ${MONGO_URI:-mongodb://mongodb-service:27017/${MONGO_DB:-repetika}}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
     depends_on:
       mongodb:
@@ -109,7 +109,7 @@ services:
       context: ./services/session_service
     env_file: [.env]
     environment:
-      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017/${MONGO_DB:-repetika}}
+      MONGO_URI: ${MONGO_URI:-mongodb://mongodb-service:27017/${MONGO_DB:-repetika}}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
     depends_on:
       mongodb:
@@ -127,7 +127,7 @@ services:
       context: ./services/quiz_service
     env_file: [.env]
     environment:
-      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017/${MONGO_DB:-repetika}}
+      MONGO_URI: ${MONGO_URI:-mongodb://mongodb-service:27017/${MONGO_DB:-repetika}}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
     depends_on:
       mongodb:
@@ -145,7 +145,7 @@ services:
       context: ./services/authentification_service
     env_file: [.env]
     environment:
-      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017/${MONGO_DB:-repetika}}
+      MONGO_URI: ${MONGO_URI:-mongodb://mongodb-service:27017/${MONGO_DB:-repetika}}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
       POSTGRES_DB: ${POSTGRES_DB:-authdb}
       POSTGRES_USER: ${POSTGRES_USER:-authuser}
