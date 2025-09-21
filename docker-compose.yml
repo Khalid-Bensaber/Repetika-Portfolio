@@ -64,8 +64,8 @@ services:
       - "8001:8000"
     volumes:
       - ./services/decks_service:/app
-      - ./services/shared:/app/shared:ro
-    command: python manage.py runserver 0.0.0.0:8000
+      - ./services/shared:/app/shared
+    command: ["./shared/entrypoint.sh"]
     restart: unless-stopped
 
   cours-service:
@@ -82,8 +82,8 @@ services:
       - "8002:8000"
     volumes:
       - ./services/cours_service:/app
-      - ./services/shared:/app/shared:ro
-    command: python manage.py runserver 0.0.0.0:8000
+      - ./services/shared:/app/shared
+    command: ["./shared/entrypoint.sh"]
     restart: unless-stopped
 
   planning-service:
@@ -100,8 +100,8 @@ services:
       - "8003:8000"
     volumes:
       - ./services/planning_service:/app
-      - ./services/shared:/app/shared:ro
-    command: python manage.py runserver 0.0.0.0:8000
+      - ./services/shared:/app/shared
+    command: ["./shared/entrypoint.sh"]
     restart: unless-stopped
 
   session-service:
@@ -118,8 +118,8 @@ services:
       - "8004:8000"
     volumes:
       - ./services/session_service:/app
-      - ./services/shared:/app/shared:ro
-    command: python manage.py runserver 0.0.0.0:8000
+      - ./services/shared:/app/shared
+    command: ["./shared/entrypoint.sh"]
     restart: unless-stopped
 
   quiz-service:
@@ -136,8 +136,8 @@ services:
       - "8005:8000"
     volumes:
       - ./services/quiz_service:/app
-      - ./services/shared:/app/shared:ro
-    command: python manage.py runserver 0.0.0.0:8000
+      - ./services/shared:/app/shared
+    command: ["./shared/entrypoint.sh"]
     restart: unless-stopped
 
   authentification-service:
@@ -161,7 +161,7 @@ services:
       - "8006:8000"
     volumes:
       - ./services/authentification_service:/app
-      - ./services/shared:/app/shared:ro
+      - ./services/shared:/app/shared
     command: ["/entrypoint.sh"]
     restart: unless-stopped
   gateway:
