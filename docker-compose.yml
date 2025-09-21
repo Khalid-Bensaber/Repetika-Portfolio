@@ -46,8 +46,8 @@ services:
       - "8000:8000"
     volumes:
       - ./services/main_service:/app
-      - ./services/shared:/app/shared:ro
-    command: python manage.py runserver 0.0.0.0:8000
+      - ./services/shared:/app/shared
+    command: ["./shared/entrypoint.sh"]
     restart: unless-stopped
 
   decks-service:
@@ -162,10 +162,7 @@ services:
     volumes:
       - ./services/authentification_service:/app
       - ./services/shared:/app/shared:ro
-    command: >
-      bash -lc "python wait_db.py &&
-                python manage.py migrate --noinput &&
-                python manage.py runserver 0.0.0.0:8000"
+    command: ["/entrypoint.sh"]
     restart: unless-stopped
   gateway:
     image: nginx:1.25

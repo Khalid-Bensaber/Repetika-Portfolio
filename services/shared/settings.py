@@ -143,3 +143,10 @@ SIMPLE_JWT = {
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
     "TOKEN_BLACKLIST_ENABLED": True,
 }
+
+DATABASES = { # Overwritten in auth service
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'shared/db.sqlite3',
+    }
+}
