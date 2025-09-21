@@ -42,7 +42,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Vendor shared into service
-        run: cp -a "$GITHUB_WORKSPACE/services/shared/." "./shared/" #TODO: Delete this line (and above) and replace by making 'shared' a module
+        run: cp -a "$GITHUB_WORKSPACE/services/shared/." "./shared/"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

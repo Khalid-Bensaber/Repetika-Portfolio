@@ -879,7 +879,7 @@ class ShowAllSharedCourses(APIView):
             # Get the author's name
             author = find_documents_fields(
                 "DB_Users",
-                "Users", #TODO
+                "Users",
                 query={"_id": ObjectId(author_id)},
                 fields=["username"]
             )

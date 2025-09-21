@@ -1,145 +1,83 @@
-# Utilisation de l'appli sur votre téléphone (Android et IOS)
+# Repetika
 
+A monorepo for a learning platform employing spaced repetition to make learning fun and effective.
 
-## Ordinateur
+## Highlights
 
-Clonez le projet github ici présent.
-Récupérez l'IP de votre ordinateur via le terminal
-*Windows :*
-```ipconfig```
-*Linux :*
-```ifconfig```
-### Application
+* Multi-service backend (authentication, courses, decks, planning, sessions, quiz, main gateway)
+* React Native app built with Expo for web and mobile
+* Local orchestration with Docker Compose and an NGINX dev proxy
+* Continuous Integration with GitHub Actions, including testing and static analysis
 
-Modifiez le fichier 
-```Repetika\mobileApp\RepetikaApp\src\config\config.js```
-en remplacant BASE_URL par l'ip de votre odinateur (ne pas oublier :8000/api a la fin).
+## Getting started
 
-Dans ``` Reptika/mobileApp/RepetikaApp/ ```:
-Installez les dépendances (uniquement la première fois)
-```npm install```
-```npx expo install```
+### Prerequisites
 
-Lancez expo:
-```npx expo start --tunnel```
+* Docker Desktop (or Docker Engine) installed
+* Node.js LTS and npm installed
+* If testing on a mobile device, install the **Expo Go** app (App Store / Google Play)
 
-### Serveur
-Dans ``` Repetika\core ```
+### 0) Configure environment
 
-La première fois:
-Installez les dépendances python:
-````pip -r core/requirements.txt````
+Create a `.env` file at the repository root with the following variables (setting the values as needed). Replace `SECRET_KEY` and `POSTGRES_PASSWORD` with secure values for use in production.
 
-Dans ``` Repetika\core\MainServer ```
-Executez la commande:
-``` python manage.py runserver 0.0.0.0:8000 ```
-
-
-## Téléphone
-Sur votre téléphone, installez expo go.
-Scannez le qr code qui s'est affiché quand vous avez éxecuté npx expo start
-
-
----
-
-## Minikube
-### Téléchargement de Minikube
-Linux :
-```bash 
-curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-sudo install minikube-linux-amd64 /usr/local/bin/minikube
-rm minikube-linux-amd64
+```
+MONGO_DB=repetika
+MONGO_URL=mongodb://mongodb:27017/repetika
+MONGO_URI=mongodb://mongodb:27017/
+SECRET_KEY=placeholder_secret_key
+POSTGRES_DB=authdb
+POSTGRES_USER=authuser
+POSTGRES_PASSWORD=authpass
 ```
 
-Windows : 
-- (installer) https://github.com/kubernetes/minikube/releases/download/v1.36.0/minikube-installer.exe
-- (Github) https://github.com/kubernetes/minikube/releases/tag/v1.36.0
+Docker Compose reads this file automatically when you run the stack.
 
-### Lancement de Minikube
-``minikube start``
-
-
----
-
-
-
-# Création des conteneurs et leur déploiment
-
-### On veut pointer vers le Docker interne de Minikube
-Linux : ``eval $(minikube docker-env)`` 
-
-Windows (Powershell ): ``minikube -p minikube docker-env --shell powershell | Invoke-Expression``
-
-### Construction des images Docker
+### 1) Start the backend stack
 
 ```bash
-docker build -t main-service:latest ./main_service
-docker build -t decks-service:latest ./decks_service
-docker build -t cours-service:latest ./cours_service
-docker build -t planning-service:latest ./planning_service
-docker build -t session-service:latest ./session_service
-docker build -t quiz-service:latest ./quiz_service
-docker build -t authentification-service:latest ./authentification_service
+git clone https://github.com/Romain-Ryckebusch/Repetika.git
+cd Repetika
+
+docker compose up --build -d
 ```
 
-### Ajout dans Kubernets avec kubectl
-``minikube kubectl -- apply -f yaml/ ``
+### 2) Launch the app (Expo)
 
----
+```bash
+cd apps/mobile/RepetikaApp
 
+npm install
 
-# Restauration de la base de données MongoDB
+npx expo install # Press 'Y' when prompted to install ngrok
 
+npx expo start --tunnel
+```
 
-### Trouver le nom du pod MongoDB (exemple: mongodb-xxxxxxxxxx-xxxxx)
-``minikube kubectl get pods``
+### 3) Use the app
 
-### Copier la sauvegarde dans le pod
-``minikube kubectl cp ./k8s/Default-Repetika-mongodump mongodb-xxxxxxxxxx-xxxxx:/tmp/save_mongo``
+* **Web preview**: open the URL printed by the Expo CLI (or press `w` in the terminal).
+* **Mobile**: open **Expo Go** on your phone and scan the QR code shown by the CLI.
 
-### Ouvrir un shell dans le pod
-``minikube kubectl -- exec -it mongodb-xxxxxxxxxx-xxxxx -- bash``
+### 4) Stop services
 
-### Restaurer la base MongoDB dans le pod
-``mongorestore /tmp/save_mongo``
+```bash
+# from the repository root
+docker compose down
+```
 
-## Accès à la base MongoDB via Compass (port forwarding)
-``minikube kubectl port-forward svc/mongodb 27017:27017``
+## Troubleshooting
 
-## Afficher l'ip de Minikube
-``minikube ip``
+* **Expo tunnel issues**: if the tunnel is unstable on your network, try `npx expo start` and select **LAN** as the connection type, or restart the Expo server.
+* **Ports in use**: stop stale containers or processes that bind the same ports, then re-run `docker compose up --build -d`.
+* **Cold start**: the first `compose up` includes image builds and may take several minutes depending on your machine.
 
-### On peut afficher les services (pour connaître leur port)
-``minikube kubectl get svc``
+## Why this repo may interest you
 
----
+* Demonstrates a modular service architecture packaged for fast local onboarding.
+* Shows a single codebase running both a mobile app and a web preview through Expo.
+* Uses Docker to keep developer machines clean and environments reproducible.
 
+## License
 
-# Mise en place d'Contrôleur d'entrée Ingress
-
-## Activation
-``minikube addons enable ingress``
-
-### création d'une IP locale (ex : 127.0.0.1 ou 192.168.49.2) pour exposer les services de type LoadBalancer utilisés par l'Ingress Controller
-``minikube tunnel``
-
-## Ouvrir le fichier /etc/hosts
-``sudo nano /etc/hosts``
-
-## ajouter cette ligne en remplaceant IP_MINIKUBE par l'ip de Minikube
-``IP_MINIKUBE main.local``
-
-### Cette ligne indique au système que lorsqu'on entre main.local dans un navigateur ou une requête réseau, il doit contacter l’adresse ip correspondant à Minikube
-
----
-
-
-# On peux maintenant interagir avec le cluster Minkube
-
-## Avec React
-
-``fetch('http://main.local/api/main/GetChapter')``
-
-## Directement dans le navigateur
-
-``http://main.local/api/main/ajout-cours``
+See `LICENSE` in the repository root.
