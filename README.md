@@ -1,4 +1,7 @@
-# Repetika
+<h1>
+  <img src="apps/mobile/RepetikaApp/assets/icon.png" alt="Repetika Logo" width="60" style="vertical-align: middle; margin-right: 10px;">
+   Repetika
+</h1>
 
 A monorepo for a learning platform employing spaced repetition to make learning fun and effective.
 
@@ -81,3 +84,10 @@ docker compose down
 ## License
 
 See `LICENSE` in the repository root.
+
+---
+
+### Personal showcase note
+This repository is a **personal portfolio version** of the Repetika project, rebuilt from the original academic collaboration.  
+It highlights **my main contributions**: backend architecture, authentication service, CI/CD setup, and project documentation.  
+Original team repository remains credited.
